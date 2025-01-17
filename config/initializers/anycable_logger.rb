@@ -1,0 +1,2 @@
+AnyCable.logger = Rails.logger
+
