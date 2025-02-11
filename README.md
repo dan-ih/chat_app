@@ -14,13 +14,7 @@ This is a WebSocket-enabled chat application using Rails, AnyCable, Redis, and D
 
 ## Running the App with Docker Compose
 
-### **1. Clone the Repository**
-```sh
-git clone <your-repo-url>
-cd <your-repo-directory>
-```
-
-### **2. Build and Start Services**
+### ** Build and Start Services**
 ```sh
 docker-compose up --build
 ```
