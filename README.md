@@ -14,7 +14,7 @@ This is a WebSocket-enabled chat application using Rails, AnyCable, Redis, and D
 
 ## Running the App with Docker Compose
 
-### ** Build and Start Services**
+### **1. Build and Start Services**
 ```sh
 docker-compose up --build
 ```
@@ -27,13 +27,13 @@ This will start all services defined in `docker-compose.yml`:
 - Prometheus on **port 9091**
 - Grafana on **port 3001**
 
-### **3. Access the Rails App**
+### **2. Access the Rails App**
 Open your browser and go to:
 ```
 http://localhost:3000/
 ```
 
-### **4. Connect to Different AnyCable Instances**
+### **3. Connect to Different AnyCable Instances**
 The WebSocket server is determined by the URL path:
 
 | URL | WebSocket Port |
