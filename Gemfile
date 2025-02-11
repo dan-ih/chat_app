@@ -16,6 +16,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
+gem "redis"
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
@@ -57,8 +58,6 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "anycable-rails"
+gem "anycable-rails-core"
 
-
-gem 'grpc'
 

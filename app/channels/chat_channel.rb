@@ -1,10 +1,14 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "chat_channel"
+    stream_for "ChatChannel"
+    stream_for params["room_id"]
+
   end
 
   def speak(data)
-    ActionCable.server.broadcast "chat_channel", {message: data["message"]}
+    # Persist the message if needed
+    broadcast_to params["room_id"], message: data["message"]
+
   end
 end
 

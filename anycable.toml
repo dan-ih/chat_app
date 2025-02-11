@@ -12,7 +12,7 @@ secret = "anycable-local-secret"
 broadcast_adapters = ["http"]
 
 # Pub/sub adapter for inter-node communication
-# pubsub_adapter = "redis" # or "nats"
+#pubsub_adapter = "redis" # or "nats"
 
 [server]
 host = "0.0.0.0"
@@ -23,13 +23,13 @@ debug = true
 
 # Read more about broker: https://docs.anycable.io/anycable-go/reliable_streams
 [broker]
-adapter = "memory"
+#adapter = "redis"
 history_ttl = 300
 history_limit = 100
 sessions_ttl = 300
 
 [rpc]
-host = "http://localhost:3000/_anycable"
+host = "http://rails:3000/_anycable"
 # Specify HTTP headers that must be proxied to the RPC service
 proxy_headers = ["cookie"]
 # RPC concurrency (max number of concurrent RPC requests)
@@ -51,9 +51,6 @@ pubsub_channel = "$pubsub"
 # cable_ready = true
 
 [redis]
-# url = "redis://localhost:6379"
+url = "redis://localhost:6379/5"
 
 
-[http_broadcast]
-port = 8090
-path = "/_broadcast"

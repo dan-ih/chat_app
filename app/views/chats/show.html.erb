@@ -10,7 +10,7 @@
   const messageInput = document.getElementById("message-input");
   const sendButton = document.getElementById("send-button");
 
-  const cable = ActionCable.createConsumer("ws://192.168.2.72:8080/cable");
+  const cable = ActionCable.createConsumer("ws://localhost:8081/cable");
 
   const chatChannel = cable.subscriptions.create("ChatChannel", {
     received(data) {

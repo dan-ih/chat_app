@@ -1,5 +1,7 @@
 development:
   adapter: "any_cable"
+  redis:
+    url: redis://redis:6379/5
 
 test:
   adapter: "any_cable"

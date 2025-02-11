@@ -4,7 +4,7 @@ module ApplicationCable
 
     private
       def report_error(e)
-        SomeExternalBugtrackingService.notify(e)
+         Rails.logger.error  ">>> ERROR: #{e.message}\n#{e.backtrace.join('\n')}"
       end
   end
 end

@@ -1,0 +1,125 @@
+version: '3.7'
+services:
+  rails:
+    build: .
+    container_name: rails-app
+    volumes:
+      - .:/app
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - RAILS_ENV=development
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    command: bin/rails server -b 0.0.0.0 -p 3000
+
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    ports:
+      - "9091:9090"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+
+  anycable-1:
+    image: ghcr.io/anycable/anycable-go-pro:1.5
+    ports:
+      - "8081:8080"   # WebSocket server
+      #- "8091:8090"   # HTTP broadcast
+      - "9111:5000"   # Metrics
+    environment:
+      - ANYCABLE_SECRET=anycable-local-secret
+      - ANYCABLE_DEBUG=true
+      - ANYCABLE_PUBLIC=true
+      - ANYCABLE_BROKER=redis
+      - ANYCABLE_BROADCAST_ADAPTER=redisx
+      - ANYCABLE_PUBSUB=redis
+      - ANYCABLE_HOST=0.0.0.0
+      - ANYCABLE_REDIS_URL=redis://redis:6379
+      - ANYCABLE_RPC_HOST=http://rails:3000/_anycable
+      - ANYCABLE_RPC_PROXY_HEADERS=cookie
+      - ANYCABLE_RPC_CONCURRENCY=28
+      - ANYCABLE_STREAMS_WHISPER=true
+      - ANYCABLE_METRICS_HTTP=/metrics
+      #- ANYCABLE_HTTP_BROADCAST_PORT=8090
+      #- ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
+      - ANYCABLE_HISTORY_TTL=300         # Retain history for 300 seconds (adjust as needed)
+      - ANYCABLE_HISTORY_LIMIT=100       # Store up to 100 messages per channel
+      - ANYCABLE_SESSIONS_TTL=300        # TTL for session data
+    depends_on:
+      - redis
+      - rails
+
+  anycable-2:
+    image: ghcr.io/anycable/anycable-go-pro:1.5
+    ports:
+      - "8082:8080"
+      - "8092:8090"
+      - "9112:5000"
+    environment:
+      - ANYCABLE_SECRET=anycable-local-secret
+      - ANYCABLE_PUBLIC=true
+      - ANYCABLE_BROADCAST_ADAPTER=redis
+      - ANYCABLE_PUBSUB_ADAPTER=redis
+      - ANYCABLE_HOST=0.0.0.0
+      - ANYCABLE_REDIS_URL=redis://redis:6379
+      - ANYCABLE_RPC_HOST=http://rails:3000/_anycable
+      - ANYCABLE_RPC_PROXY_HEADERS=cookie
+      - ANYCABLE_RPC_CONCURRENCY=28
+      - ANYCABLE_STREAMS_WHISPER=true
+      - ANYCABLE_METRICS_HTTP=/metrics
+      - ANYCABLE_HTTP_BROADCAST_PORT=8090
+      - ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
+    depends_on:
+      - redis
+      - rails
+
+  anycable-3:
+    image: ghcr.io/anycable/anycable-go-pro:1.5
+    ports:
+      - "8083:8080"
+      - "8093:8090"
+      - "9113:5000"
+    environment:
+      - ANYCABLE_SECRET=anycable-local-secret
+      - ANYCABLE_PUBLIC=true
+      - ANYCABLE_BROADCAST_ADAPTER=redis
+      - ANYCABLE_PUBSUB_ADAPTER=redis
+      - ANYCABLE_REDIS_URL=redis://redis:6379
+      - ANYCABLE_HOST=0.0.0.0
+      - ANYCABLE_RPC_HOST=http://rails:3000/_anycable
+      - ANYCABLE_RPC_PROXY_HEADERS=cookie
+      - ANYCABLE_RPC_CONCURRENCY=28
+      - ANYCABLE_STREAMS_WHISPER=true
+      - ANYCABLE_METRICS_HTTP=/metrics
+      - ANYCABLE_HTTP_BROADCAST_PORT=8090
+      - ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
+    depends_on:
+      - redis
+      - rails
+
+volumes:
+  prometheus-data:
+  grafana-data:
+  redis-data:
+
