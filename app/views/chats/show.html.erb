@@ -2,7 +2,6 @@
 </div>
 <input id="message-input" type="text" placeholder="Type a message">
 <button id="send-button">Send</button>
-
 <script type="module">
   import * as ActionCable from "@rails/actioncable";
 
@@ -10,7 +9,16 @@
   const messageInput = document.getElementById("message-input");
   const sendButton = document.getElementById("send-button");
 
-  const cable = ActionCable.createConsumer("ws://localhost:8081/cable");
+  // Get anycable_id from Rails
+  const anycableId = "<%= @anycable_id %>";
+  const portMapping = {
+    "1": 8081,
+    "2": 8082,
+    "3": 8083
+  };
+  const port = portMapping[anycableId] || 8081;
+
+  const cable = ActionCable.createConsumer(`ws://localhost:${port}/cable`);
 
   const chatChannel = cable.subscriptions.create("ChatChannel", {
     received(data) {

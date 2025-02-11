@@ -61,8 +61,6 @@ services:
       - ANYCABLE_RPC_CONCURRENCY=28
       - ANYCABLE_STREAMS_WHISPER=true
       - ANYCABLE_METRICS_HTTP=/metrics
-      #- ANYCABLE_HTTP_BROADCAST_PORT=8090
-      #- ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
       - ANYCABLE_HISTORY_TTL=300         # Retain history for 300 seconds (adjust as needed)
       - ANYCABLE_HISTORY_LIMIT=100       # Store up to 100 messages per channel
       - ANYCABLE_SESSIONS_TTL=300        # TTL for session data
@@ -78,9 +76,11 @@ services:
       - "9112:5000"
     environment:
       - ANYCABLE_SECRET=anycable-local-secret
+      - ANYCABLE_DEBUG=true
       - ANYCABLE_PUBLIC=true
-      - ANYCABLE_BROADCAST_ADAPTER=redis
-      - ANYCABLE_PUBSUB_ADAPTER=redis
+      - ANYCABLE_BROKER=redis
+      - ANYCABLE_BROADCAST_ADAPTER=redisx
+      - ANYCABLE_PUBSUB=redis
       - ANYCABLE_HOST=0.0.0.0
       - ANYCABLE_REDIS_URL=redis://redis:6379
       - ANYCABLE_RPC_HOST=http://rails:3000/_anycable
@@ -88,8 +88,9 @@ services:
       - ANYCABLE_RPC_CONCURRENCY=28
       - ANYCABLE_STREAMS_WHISPER=true
       - ANYCABLE_METRICS_HTTP=/metrics
-      - ANYCABLE_HTTP_BROADCAST_PORT=8090
-      - ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
+      - ANYCABLE_HISTORY_TTL=300         # Retain history for 300 seconds (adjust as needed)
+      - ANYCABLE_HISTORY_LIMIT=100       # Store up to 100 messages per channel
+      - ANYCABLE_SESSIONS_TTL=300        # TTL for session data
     depends_on:
       - redis
       - rails
@@ -102,18 +103,21 @@ services:
       - "9113:5000"
     environment:
       - ANYCABLE_SECRET=anycable-local-secret
+      - ANYCABLE_DEBUG=true
       - ANYCABLE_PUBLIC=true
-      - ANYCABLE_BROADCAST_ADAPTER=redis
-      - ANYCABLE_PUBSUB_ADAPTER=redis
-      - ANYCABLE_REDIS_URL=redis://redis:6379
+      - ANYCABLE_BROKER=redis
+      - ANYCABLE_BROADCAST_ADAPTER=redisx
+      - ANYCABLE_PUBSUB=redis
       - ANYCABLE_HOST=0.0.0.0
+      - ANYCABLE_REDIS_URL=redis://redis:6379
       - ANYCABLE_RPC_HOST=http://rails:3000/_anycable
       - ANYCABLE_RPC_PROXY_HEADERS=cookie
       - ANYCABLE_RPC_CONCURRENCY=28
       - ANYCABLE_STREAMS_WHISPER=true
       - ANYCABLE_METRICS_HTTP=/metrics
-      - ANYCABLE_HTTP_BROADCAST_PORT=8090
-      - ANYCABLE_HTTP_BROADCAST_PATH=/_broadcast
+      - ANYCABLE_HISTORY_TTL=300         # Retain history for 300 seconds (adjust as needed)
+      - ANYCABLE_HISTORY_LIMIT=100       # Store up to 100 messages per channel
+      - ANYCABLE_SESSIONS_TTL=300        # TTL for session data
     depends_on:
       - redis
       - rails
