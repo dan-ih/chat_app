@@ -23,7 +23,7 @@
   const chatChannel = cable.subscriptions.create("ChatChannel", {
     received(data) {
       const messageElement = document.createElement("div");
-      messageElement.innerText = data.message;
+      messageElement.innerHTML = `<strong>${data.sender_id}</strong> [${data.timestamp}]: ${data.message}`;
       messagesContainer.appendChild(messageElement);
     }
   });

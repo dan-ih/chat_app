@@ -1,13 +1,16 @@
 class ChatChannel < ApplicationCable::Channel
   def subscribed
-    stream_for "ChatChannel"
-    stream_for params["room_id"]
-
+    stream_from "ChatChannel"
   end
 
   def speak(data)
-    # Persist the message if needed
-    broadcast_to params["room_id"], message: data["message"]
+    message = {
+      message: data["message"],
+      sender_id: cookies.signed[:user_id] = current_user.id if current_user
+      timestamp: Time.now.strftime("%H:%M:%S") # Format: HH:MM:SS
+    }
+
+    ActionCable.server.broadcast("chat_channel", message)
 
   end
 end
